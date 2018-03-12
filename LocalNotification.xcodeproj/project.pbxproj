@@ -15,6 +15,7 @@
 		2E42ED05205652C10031B7C5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E42ED04205652C10031B7C5 /* main.m */; };
 		2E42ED0F205652C20031B7C5 /* LocalNotificationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E42ED0E205652C20031B7C5 /* LocalNotificationTests.m */; };
 		2E42ED1A205652C20031B7C5 /* LocalNotificationUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E42ED19205652C20031B7C5 /* LocalNotificationUITests.m */; };
+		2E42ED282056789E0031B7C5 /* image1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E42ED272056789D0031B7C5 /* image1.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		2E42ED15205652C20031B7C5 /* LocalNotificationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalNotificationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E42ED19205652C20031B7C5 /* LocalNotificationUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalNotificationUITests.m; sourceTree = "<group>"; };
 		2E42ED1B205652C20031B7C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E42ED272056789D0031B7C5 /* image1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				2E42ECF6205652C10031B7C5 /* AppDelegate.m */,
 				2E42ECF8205652C10031B7C5 /* ViewController.h */,
 				2E42ECF9205652C10031B7C5 /* ViewController.m */,
+				2E42ED272056789D0031B7C5 /* image1.png */,
 				2E42ECFB205652C10031B7C5 /* Main.storyboard */,
 				2E42ECFE205652C10031B7C5 /* Assets.xcassets */,
 				2E42ED00205652C10031B7C5 /* LaunchScreen.storyboard */,
@@ -239,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E42ED02205652C10031B7C5 /* LaunchScreen.storyboard in Resources */,
+				2E42ED282056789E0031B7C5 /* image1.png in Resources */,
 				2E42ECFF205652C10031B7C5 /* Assets.xcassets in Resources */,
 				2E42ECFD205652C10031B7C5 /* Main.storyboard in Resources */,
 			);
@@ -433,6 +437,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B7QX9LL49R;
 				INFOPLIST_FILE = LocalNotification/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zidong.LocalNotification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -447,6 +452,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = B7QX9LL49R;
 				INFOPLIST_FILE = LocalNotification/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zidong.LocalNotification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
