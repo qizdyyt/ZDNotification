@@ -15,25 +15,39 @@
 
 @implementation AppDelegate
 
-
+    //launchOptions ：启动选项参数：当程序是通过点击应用程序图标时该参数是nil，当应用程序完全退出时，点击推送通知时该参数不为空，key为UIApplicationLaunchOptionsLocalNotificationKey(本地)或者UIApplicationLaunchOptionsRemoteNotificationKey(远程)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    //launchOptions ：启动选项参数：当程序是通过点击应用程序图标时该参数是nil，当应用程序完全退出时，点击推送通知时该参数不为空，key为UIApplicationLaunchOptionsLocalNotificationKey
+
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)] && [[[UIDevice currentDevice] systemVersion] floatValue] < 10.0) {//iOS8以后
-        //简单的注册一个通知
+        //1.简单的注册一个通知，向用户请求可以给用户推送消息
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil]];
         [self registeriOS89LocalNotification];//在iOS10之后可以发通知但没有操作按钮了
+//        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert categories:nil];
+//        [application registerUserNotificationSettings:settings];
+        // 2.注册远程通知(拿到用户的DeviceToken)
+        [application registerForRemoteNotifications];
+        
     }else if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
 //        [self registeriOS89LocalNotification];
         [self registeriOS10LocalNotification];
     }
     else { // iOS 7 and earlier
+        //
         [application registerForRemoteNotificationTypes:
          UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge |
          UIRemoteNotificationTypeSound];
     }
     
     return YES;
+}
+//远程通知注册成功回调这里，会有一个deviceToken
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+    NSLog(@"%@", deviceToken);
+}
+//远程通知注册失败回调这里
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
+    NSLog(@"%@", error);
 }
 
 - (void)registeriOS89LocalNotification {
@@ -100,6 +114,22 @@
     
     completionHandler();
 }
+//已经收到远程推送回调。点进去看注释就可以进行适配了，下面也有代码
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    
+}
+//已经收到远程推送回调。点进去看注释就可以进行适配iOS 10了，下面也有代码
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
+    
+}
+//远程推送的按钮事件响应回调。点进去看注释就可以进行适配iOS 10了，下面也有代码
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler {
+    
+}
+//远程推送的按钮事件响应回调。点进去看注释就可以进行适配iOS 10了，下面也有代码
+-(void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
+    
+}
 
 - (void)showAlertView:(NSString *)message
 {
@@ -120,7 +150,8 @@
         [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
             if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
                 [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                    if (granted) {//用户点击允许
+                    if (granted) {//用户点击允许通知，本地通知注册好了
+                        //同时注册远程通知
                         [[UIApplication sharedApplication] registerForRemoteNotifications];
                     }else {
                         //用户点击不允许
@@ -136,7 +167,7 @@
     //定义按钮的交互button action
     if (@available(iOS 10.0, *)) {
         /**
-         UNNotificationActionOptionAuthenticationRequired: 锁屏时需要解锁才能触发事件，触发后不会直接进入应用
+         UNNotificationActionOptionAuthenticationRequired: 锁屏时需要解锁才能触发事件，触发后不会直接进入应用，不常用
          UNNotificationActionOptionDestructive：字体会显示为红色，且锁屏时触发该事件不需要解锁，触发后不会直接进入应用
          UNNotificationActionOptionForeground：锁屏时需要解锁才能触发事件，触发后会直接进入应用界面
          */
@@ -154,7 +185,7 @@
     }
 }
 
-//代理回调方法，APP在前台时触发，通知即将展示的时候
+//iOS10之后通知代理回调方法，APP在前台时触发，通知即将展示的时候
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     
     if (@available(iOS 10.0, *)) {
@@ -178,7 +209,7 @@
     }
     
 }
-//用户与通知进行交互后的response，比如说用户直接点开通知打开App、用户点击通知的按钮或者进行输入文本框的文本
+//iOS10之后用户与通知进行交互后的response，比如说用户直接点开通知打开App、用户点击通知的按钮或者进行输入文本框的文本
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     if (@available(iOS 10.0, *)) {
         UNNotificationRequest *request = response.notification.request; // 原始请求
@@ -215,9 +246,7 @@
     completionHandler();
 }
 
--(void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
-    
-}
+
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
